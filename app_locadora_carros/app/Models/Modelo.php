@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Modelo extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
         'marca_id',
         'nome',
@@ -30,5 +30,11 @@ class Modelo extends Model
             'air_bag' => 'required|boolean',
             'abs' => 'required|boolean'
         ];
+    }
+
+    public function marca()
+    {
+        // Um modelo pertence a uma marca
+        return $this->belongsTo('App\Models\Marca');
     }
 }
