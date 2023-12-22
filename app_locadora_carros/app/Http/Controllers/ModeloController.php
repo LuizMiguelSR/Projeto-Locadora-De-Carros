@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Storage;
 use App\Models\Modelo;
 use Illuminate\Http\Request;
 
@@ -34,13 +35,13 @@ class ModeloController extends Controller
         $imagem_urn = $imagem->store('imagens/modelos', 'public');
 
         $modelo = $this->modelo->create([
-            'modelo_id' => $request->modelo_id,
+            'marca_id' => $request->marca_id,
             'nome' => $request->nome,
             'imagem' => $imagem_urn,
             'numero_portas' => $request->numero_portas,
             'lugares' => $request->lugares,
             'air_bag' => $request->air_bag,
-            'abs' => $request->abs,
+            'abs' => $request->abs
         ]);
 
         return response()->json($modelo, 201);
@@ -52,7 +53,7 @@ class ModeloController extends Controller
      * @param  \App\Models\Modelo  $modelo
      * @return \Illuminate\Http\Response
      */
-    public function show(Modelo $modelo)
+    public function show($id)
     {
         $modelo = $this->modelo->find($id);
         if($modelo === null) {
@@ -68,7 +69,7 @@ class ModeloController extends Controller
      * @param  \App\Models\Modelo  $modelo
      * @return \Illuminate\Http\Response
      */
-    public function update($id)
+    public function update(Request $request, $id)
     {
         $modelo = $this->modelo->find($id);
 
@@ -121,7 +122,7 @@ class ModeloController extends Controller
      * @param  \App\Models\Modelo  $modelo
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Modelo $modelo)
+    public function destroy($id)
     {
         $modelo = $this->modelo->find($id);
 
