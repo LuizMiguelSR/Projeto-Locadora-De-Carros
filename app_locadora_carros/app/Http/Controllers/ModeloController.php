@@ -20,12 +20,20 @@ class ModeloController extends Controller
     {
         $modelos = array();
 
+        if($request->has('atributos_marca')) {
+            $atributos_marca = $request->atributos_marca;
+
+            $modelos = $this->modelo->with('marca:id,'.$atributos_marca);
+        } else {
+            $modelos = $this->modelo->with('marca');
+        }
         if ($request->has('atributos')) {
             $atributos = $request->atributos;
-            $modelos = $this->modelo->selectRaw($atributos)->with('marca')->get();
+
+            $modelos = $modelos->selectRaw($atributos)->get();
             // é importante quando usar o relacionamento com o with passar no contexto o id (marca_id) de relacionamento
         } else {
-            $modelos = $this->modelo->with('marca')->get();
+            $modelos = $modelos->get();
         }
         return response()->json($modelos, 200);
         // all() -> criando um objeto de consulta + get() = collection
