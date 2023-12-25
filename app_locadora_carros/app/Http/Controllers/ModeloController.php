@@ -16,9 +16,18 @@ class ModeloController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json($this->modelo->with('marca')->get(), 200);
+        $modelos = array();
+
+        if ($request->has('atributos')) {
+            $atributos = $request->atributos;
+            $modelos = $this->modelo->selectRaw($atributos)->with('marca')->get();
+            // é importante quando usar o relacionamento com o with passar no contexto o id (marca_id) de relacionamento
+        } else {
+            $modelos = $this->modelo->with('marca')->get();
+        }
+        return response()->json($modelos, 200);
         // all() -> criando um objeto de consulta + get() = collection
         // get() -> modificando a consulta -> collection
     }
