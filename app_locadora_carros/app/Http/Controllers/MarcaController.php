@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Storage;
+use App\Repositories\MarcaRepository;
 use Illuminate\Http\Request;
 use App\Models\Marca;
 
@@ -18,35 +19,26 @@ class MarcaController extends Controller
      */
     public function index(Request $request)
     {
+        $marcaRepository = new MarcaRepository($this->marca);
+
         $marcas = array();
 
         if($request->has('atributos_modelos')) {
-            $atributos_modelos = $request->atributos_modelos;
-
-            $marcas = $this->marca->with('modelos:id,'.$atributos_modelos);
+            $atributos_modelos = 'modelos:id,'.$request->atributos_modelos;
+            $marcaRepository->selectAtributosRegistrosRelacionados($atributos_modelos);
         } else {
-            $marcas = $this->marca->with('modelos');
+            $marcaRepository->selectAtributosRegistrosRelacionados('modelos');
         }
 
         if ($request->has('filtro')) {
-            $filtros = explode(';', $request->filtro);
-            foreach($filtros as $key => $condicao) {
-
-                $c = explode(':', $condicao);
-                $marcas = $marcas->where($c[0], $c[1], $c[2]);
-            }
+            $marcaRepository->filtro($request->filtro);
         }
 
         if ($request->has('atributos')) {
-            $atributos = $request->atributos;
-
-            $marcas = $marcas->selectRaw($atributos)->get();
-            // é importante quando usar o relacionamento com o with passar no contexto o id (marca_id) de relacionamento
-        } else {
-            $marcas = $marcas->get();
+            $marcaRepository->selectAtributos($request->atributos);
         }
 
-        return response()->json($marcas, 200);
+        return response()->json($marcaRepository->getResultado(), 200);
     }
 
     /**
