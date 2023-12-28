@@ -1,6 +1,6 @@
 # Projeto-Locadora-De-Carros
 
-Projeto de um Webservice API Rest para locação de carros
+Projeto de uma API Webservice em Rest, com autenticação por JWT para locação de carros.
 
 ## Instalação do projeto
 
@@ -13,7 +13,6 @@ Projeto de um Webservice API Rest para locação de carros
 2º Criar o arquivo .env para determinar as variáveis de ambiente basta copiar o arquivo .env.example e apagar o .example
 
 - Coloque os dados do banco de dados;
-- Coloque o servidor smtp;
 
 3º Gerar a chave de configuração da aplicação e preencher o arquivo .env com as configurações do mysql e do smtp de email
   
@@ -37,3 +36,5 @@ Projeto de um Webservice API Rest para locação de carros
         php artisan storage:link
 
 ## Pacotes e dependências
+
+[JWT Auth](https://jwt-auth.readthedocs.io/en/develop/);
