@@ -26,7 +26,8 @@ class AuthController extends Controller
 
     public function logout()
     {
-        return 'Logout';
+        auth('api')->logout();
+        return response()->json(['message' => 'O logout foi realizado com sucesso!']);
     }
 
     public function refresh()
