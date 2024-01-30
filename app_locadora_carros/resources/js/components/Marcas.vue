@@ -91,10 +91,21 @@
                 nomeMarca: '',
                 arquivoImagem: [],
                 transacaoStatus: '',
-                transacaoDetalhes: []
+                transacaoDetalhes: [],
+                marcas: []
             }
         },
         methods: {
+            carregarLista() {
+                axios.get(this.urlBase)
+                    .then(response => {
+                        this.marcas = response.data
+                        console.log(this.marcas)
+                    })
+                    .catch(errors => {
+                        console.log(errors)
+                    })
+            },
             carregarImagem(e) {
                 this.arquivoImagem = e.target.files
             },
@@ -128,6 +139,9 @@
                         //errors.response.data.message
                     })
             }
+        },
+        mounted() {
+            this.carregarLista()
         }
     }
 </script>
