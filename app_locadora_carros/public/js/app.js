@@ -5742,7 +5742,7 @@ var render = function render() {
         return [_c("table-component", {
           attrs: {
             dados: _vm.marcas,
-            titulos: ["ID", "Nome", "Imagem"]
+            titulos: ["id", "nome", "imagem", "created_at"]
           }
         })];
       },
@@ -5959,22 +5959,23 @@ var render = function render() {
     staticClass: "table table-hover"
   }, [_c("thead", [_c("tr", _vm._l(_vm.titulos, function (t, key) {
     return _c("th", {
-      key: key
+      key: key,
+      staticClass: "text-uppercase"
     }, [_vm._v(_vm._s(t))]);
-  }), 0)]), _vm._v(" "), _c("tbody", _vm._l(_vm.dados, function (m) {
+  }), 0)]), _vm._v(" "), _c("tbody", _vm._l(_vm.dados, function (obj) {
     return _c("tr", {
-      key: m.id
-    }, [_c("th", {
-      attrs: {
-        scope: "row"
-      }
-    }, [_vm._v(_vm._s(m.id))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(m.nome))]), _vm._v(" "), _c("td", [_c("img", {
-      attrs: {
-        src: "/storage/" + m.imagem,
-        width: "30",
-        height: "30"
-      }
-    })])]);
+      key: obj.id
+    }, [_vm._l(obj, function (valor, chave) {
+      return [_vm.titulos.includes(chave) ? _c("td", {
+        key: chave
+      }, [chave == "imagem" ? _c("span", [_c("img", {
+        attrs: {
+          src: "/storage/" + valor,
+          width: "30",
+          height: "30"
+        }
+      })]) : _c("span", [_vm._v("\n                            " + _vm._s(valor) + "\n                        ")])]) : _vm._e()];
+    })], 2);
   }), 0)])]);
 };
 var staticRenderFns = [];
