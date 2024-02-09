@@ -5233,6 +5233,12 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    paginacao: function paginacao(l) {
+      if (l.url) {
+        this.urlBase = l.url; // ajustando a url de consulta com o parâmetro de página
+        this.carregarLista(); // requisitando novamente os dados para nossa API
+      }
+    },
     carregarLista: function carregarLista() {
       var _this = this;
       var config = {
@@ -5810,12 +5816,14 @@ var render = function render() {
         }, [_c("paginate-component", _vm._l(_vm.marcas.links, function (l, key) {
           return _c("li", {
             key: key,
-            staticClass: "page-item"
+            "class": l.active ? "page-item active" : "page-item",
+            on: {
+              click: function click($event) {
+                return _vm.paginacao(l);
+              }
+            }
           }, [_c("a", {
             staticClass: "page-link",
-            attrs: {
-              href: "#"
-            },
             domProps: {
               innerHTML: _vm._s(l.label)
             }
@@ -6032,7 +6040,10 @@ var render = function render() {
       "aria-label": "Page navigation example"
     }
   }, [_c("ul", {
-    staticClass: "pagination"
+    staticClass: "pagination",
+    staticStyle: {
+      cursor: "pointer"
+    }
   }, [_vm._t("default")], 2)]);
 };
 var staticRenderFns = [];
