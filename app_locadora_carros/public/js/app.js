@@ -5229,10 +5229,26 @@ __webpack_require__.r(__webpack_exports__);
       transacaoDetalhes: [],
       marcas: {
         data: []
+      },
+      busca: {
+        id: '',
+        nome: ''
       }
     };
   },
   methods: {
+    pesquisar: function pesquisar() {
+      var filtro = '';
+      for (var chave in this.busca) {
+        if (this.busca[chave]) {
+          if (filtro != '') {
+            filtro += ";";
+          }
+          filtro += chave + ':like:' + this.busca[chave];
+        }
+      }
+      console.log(filtro);
+    },
     paginacao: function paginacao(l) {
       if (l.url) {
         this.urlBase = l.url; // ajustando a url de consulta com o parâmetro de página
@@ -5735,12 +5751,27 @@ var render = function render() {
             "texto-ajuda": "Opcional. Informe o ID da marca"
           }
         }, [_c("input", {
+          directives: [{
+            name: "model",
+            rawName: "v-model",
+            value: _vm.busca.id,
+            expression: "busca.id"
+          }],
           staticClass: "form-control",
           attrs: {
             type: "number",
             id: "inputId",
             "aria-describedby": "idHelp",
             placeholder: "ID"
+          },
+          domProps: {
+            value: _vm.busca.id
+          },
+          on: {
+            input: function input($event) {
+              if ($event.target.composing) return;
+              _vm.$set(_vm.busca, "id", $event.target.value);
+            }
           }
         })])], 1), _vm._v(" "), _c("div", {
           staticClass: "col mb-3"
@@ -5752,12 +5783,27 @@ var render = function render() {
             "texto-ajuda": "Opcional. Informe o ID da marca"
           }
         }, [_c("input", {
+          directives: [{
+            name: "model",
+            rawName: "v-model",
+            value: _vm.busca.nome,
+            expression: "busca.nome"
+          }],
           staticClass: "form-control",
           attrs: {
             type: "text",
             id: "inputNome",
             "aria-describedby": "nomeHelp",
             placeholder: "Nome da marca"
+          },
+          domProps: {
+            value: _vm.busca.nome
+          },
+          on: {
+            input: function input($event) {
+              if ($event.target.composing) return;
+              _vm.$set(_vm.busca, "nome", $event.target.value);
+            }
           }
         })])], 1)])];
       },
@@ -5769,6 +5815,11 @@ var render = function render() {
           staticClass: "btn btn-primary btn-sm float-end",
           attrs: {
             type: "submit"
+          },
+          on: {
+            click: function click($event) {
+              return _vm.pesquisar();
+            }
           }
         }, [_vm._v("Pesquisar")])];
       },
