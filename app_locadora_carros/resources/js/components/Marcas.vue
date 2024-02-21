@@ -2,8 +2,6 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                {{ $store.state.teste }}
-                <button @click="$store.state.teste = 'Modifiquei o valor da store do Vuex'">Teste</button>
                 <!-- inicio do card de busca -->
                 <card-component titulo="Busca de Marcas">
                     <template v-slot:conteudo>
@@ -101,7 +99,21 @@
         <modal-component id="modalMarcaVisualizar" titulo="Visualizar marca">
             <template v-slot:alertas></template>
             <template v-slot:conteudo>
-                Teste
+                <input-container-component titulo="ID">
+                    <input type="text" class="form-control" :value="$store.state.item.id" disabled>
+                </input-container-component>
+
+                <input-container-component titulo="Nome da Marca">
+                    <input type="text" class="form-control" :value="$store.state.item.nome" disabled>
+                </input-container-component>
+
+                <input-container-component titulo="Imagem">
+                    <img :src="'storage/'+$store.state.item.imagem" v-if="$store.state.item.imagem">
+                </input-container-component>
+
+                <input-container-component titulo="Data de Criação">
+                <input type="text" class="form-control" :value="$store.state.item.created_at" disabled>
+                </input-container-component>
             </template>
             <template v-slot:rodape>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>

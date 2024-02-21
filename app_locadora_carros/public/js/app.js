@@ -6629,6 +6629,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: ['dados', 'titulos', "atualizar", "visualizar", "remover"],
+  methods: {
+    setStore: function setStore(obj) {
+      this.$store.state.item = obj;
+    }
+  },
   computed: {
     dadosFiltrados: function dadosFiltrados() {
       var campos = Object.keys(this.titulos);
@@ -7008,13 +7013,7 @@ var render = function render() {
     staticClass: "row justify-content-center"
   }, [_c("div", {
     staticClass: "col-md-8"
-  }, [_vm._v("\n            " + _vm._s(_vm.$store.state.teste) + "\n            "), _c("button", {
-    on: {
-      click: function click($event) {
-        _vm.$store.state.teste = "Modifiquei o valor da store do Vuex";
-      }
-    }
-  }, [_vm._v("Teste")]), _vm._v(" "), _c("card-component", {
+  }, [_c("card-component", {
     attrs: {
       titulo: "Busca de Marcas"
     },
@@ -7301,7 +7300,54 @@ var render = function render() {
     }, {
       key: "conteudo",
       fn: function fn() {
-        return [_vm._v("\n            Teste\n        ")];
+        return [_c("input-container-component", {
+          attrs: {
+            titulo: "ID"
+          }
+        }, [_c("input", {
+          staticClass: "form-control",
+          attrs: {
+            type: "text",
+            disabled: ""
+          },
+          domProps: {
+            value: _vm.$store.state.item.id
+          }
+        })]), _vm._v(" "), _c("input-container-component", {
+          attrs: {
+            titulo: "Nome da Marca"
+          }
+        }, [_c("input", {
+          staticClass: "form-control",
+          attrs: {
+            type: "text",
+            disabled: ""
+          },
+          domProps: {
+            value: _vm.$store.state.item.nome
+          }
+        })]), _vm._v(" "), _c("input-container-component", {
+          attrs: {
+            titulo: "Imagem"
+          }
+        }, [_vm.$store.state.item.imagem ? _c("img", {
+          attrs: {
+            src: "storage/" + _vm.$store.state.item.imagem
+          }
+        }) : _vm._e()]), _vm._v(" "), _c("input-container-component", {
+          attrs: {
+            titulo: "Data de Criação"
+          }
+        }, [_c("input", {
+          staticClass: "form-control",
+          attrs: {
+            type: "text",
+            disabled: ""
+          },
+          domProps: {
+            value: _vm.$store.state.item.created_at
+          }
+        })])];
       },
       proxy: true
     }, {
@@ -7437,7 +7483,7 @@ __webpack_require__.r(__webpack_exports__);
 var render = function render() {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("div", [_vm._v("\n    " + _vm._s(_vm.$store.state.teste) + "\n    "), _c("table", {
+  return _c("div", [_c("table", {
     staticClass: "table table-hover"
   }, [_c("thead", [_c("tr", [_vm._l(_vm.titulos, function (t, key) {
     return _c("th", {
@@ -7461,6 +7507,11 @@ var render = function render() {
       attrs: {
         "data-toggle": _vm.visualizar.dataToggle,
         "data-target": _vm.visualizar.dataTarget
+      },
+      on: {
+        click: function click($event) {
+          return _vm.setStore(obj);
+        }
       }
     }, [_vm._v("Visualizar")]) : _vm._e(), _vm._v(" "), _vm.atualizar ? _c("button", {
       staticClass: "btn btn-outline-primary btn-sm"
@@ -7500,7 +7551,7 @@ window.Vue = (__webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js
 vue__WEBPACK_IMPORTED_MODULE_0__["default"].use(Vuex__WEBPACK_IMPORTED_MODULE_1__["default"]);
 var store = new Vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
   state: {
-    teste: 'Teste de recuperação de valor do Store da Vuex'
+    item: {}
   }
 });
 

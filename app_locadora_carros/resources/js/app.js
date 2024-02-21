@@ -16,7 +16,7 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
     state: {
-        teste: 'Teste de recuperação de valor do Store da Vuex'
+        item: {}
     }
 })
 
