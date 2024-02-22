@@ -7122,7 +7122,11 @@ var render = function render() {
               dataTarget: "#modalMarcaVisualizar"
             },
             atualizar: true,
-            remover: true,
+            remover: {
+              visivel: true,
+              dataToggle: "modal",
+              dataTarget: "#modalMarcaRemover"
+            },
             titulos: {
               id: {
                 titulo: "ID",
@@ -7363,6 +7367,62 @@ var render = function render() {
       },
       proxy: true
     }])
+  }), _vm._v(" "), _c("modal-component", {
+    attrs: {
+      id: "modalMarcaRemover",
+      titulo: "Remover marca"
+    },
+    scopedSlots: _vm._u([{
+      key: "alertas",
+      fn: function fn() {
+        return undefined;
+      },
+      proxy: true
+    }, {
+      key: "conteudo",
+      fn: function fn() {
+        return [_c("input-container-component", {
+          attrs: {
+            titulo: "ID"
+          }
+        }, [_c("input", {
+          staticClass: "form-control",
+          attrs: {
+            type: "text",
+            disabled: ""
+          },
+          domProps: {
+            value: _vm.$store.state.item.id
+          }
+        })]), _vm._v(" "), _c("input-container-component", {
+          attrs: {
+            titulo: "Nome da Marca"
+          }
+        }, [_c("input", {
+          staticClass: "form-control",
+          attrs: {
+            type: "text",
+            disabled: ""
+          },
+          domProps: {
+            value: _vm.$store.state.item.nome
+          }
+        })])];
+      },
+      proxy: true
+    }, {
+      key: "rodape",
+      fn: function fn() {
+        return [_c("button", {
+          staticClass: "btn btn-secondary",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal"
+          }
+        }, [_vm._v("Fechar")])];
+      },
+      proxy: true
+    }])
   })], 1);
 };
 var staticRenderFns = [];
@@ -7489,7 +7549,7 @@ var render = function render() {
     return _c("th", {
       key: key
     }, [_vm._v(_vm._s(t.titulo))]);
-  }), _vm._v(" "), _vm.visualizar.visivel || _vm.atualizar || _vm.remover ? _c("th") : _vm._e()], 2)]), _vm._v(" "), _c("tbody", _vm._l(_vm.dadosFiltrados, function (obj, chave) {
+  }), _vm._v(" "), _vm.visualizar.visivel || _vm.atualizar || _vm.remover.visivel ? _c("th") : _vm._e()], 2)]), _vm._v(" "), _c("tbody", _vm._l(_vm.dadosFiltrados, function (obj, chave) {
     return _c("tr", {
       key: chave
     }, [_vm._l(obj, function (valor, chaveValor) {
@@ -7502,7 +7562,7 @@ var render = function render() {
           height: "30"
         }
       })]) : _vm._e()]);
-    }), _vm._v(" "), _vm.visualizar.visivel || _vm.atualizar || _vm.remover ? _c("td", [_vm.visualizar.visivel ? _c("button", {
+    }), _vm._v(" "), _vm.visualizar.visivel || _vm.atualizar || _vm.remover.visivel ? _c("td", [_vm.visualizar.visivel ? _c("button", {
       staticClass: "btn btn-outline-primary btn-sm",
       attrs: {
         "data-toggle": _vm.visualizar.dataToggle,
@@ -7515,8 +7575,17 @@ var render = function render() {
       }
     }, [_vm._v("Visualizar")]) : _vm._e(), _vm._v(" "), _vm.atualizar ? _c("button", {
       staticClass: "btn btn-outline-primary btn-sm"
-    }, [_vm._v("Atualizar")]) : _vm._e(), _vm._v(" "), _vm.remover ? _c("button", {
-      staticClass: "btn btn-outline-danger btn-sm"
+    }, [_vm._v("Atualizar")]) : _vm._e(), _vm._v(" "), _vm.remover.visivel ? _c("button", {
+      staticClass: "btn btn-outline-danger btn-sm",
+      attrs: {
+        "data-toggle": _vm.remover.dataToggle,
+        "data-target": _vm.remover.dataTarget
+      },
+      on: {
+        click: function click($event) {
+          return _vm.setStore(obj);
+        }
+      }
     }, [_vm._v("Remover")]) : _vm._e()]) : _vm._e()], 2);
   }), 0)])]);
 };
