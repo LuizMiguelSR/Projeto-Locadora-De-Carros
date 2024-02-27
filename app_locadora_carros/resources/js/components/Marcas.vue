@@ -31,7 +31,7 @@
                         <table-component
                             :dados="marcas.data"
                             :visualizar="{ visivel: true, dataToggle: 'modal', dataTarget: '#modalMarcaVisualizar'}"
-                            :atualizar="true"
+                            :atualizar="{visivel: true, dataToggle: 'modal', dataTarget: '#modalMarcaAtualizar'}"
                             :remover="{visivel: true, dataToggle: 'modal', dataTarget: '#modalMarcaRemover'}"
                             :titulos="{
                                 id: {titulo: 'ID', tipo: 'texto'},
@@ -65,7 +65,7 @@
 
             </div>
         </div>
-        <!-- Iniciio do modal de adicção de marca -->
+        <!-- Iniciio do modal de inclusão de marca -->
         <modal-component id="modalMarca" titulo="Adicionar marca">
             <template v-slot:alertas>
                 <alert-component tipo="success" :detalhes="transacaoDetalhes" titulo="Cadastro realizado com sucesso" v-if="transacaoStatus == 'adicionado'"></alert-component>
@@ -94,6 +94,32 @@
             </template>
         </modal-component>
         <!-- Fim do modal de inclusão de marca -->
+
+        <!-- Iniciio do modal de atulização de marca -->
+        <modal-component id="modalMarcaAtualizar" titulo="Atualizar marca">
+            <template v-slot:alertas>
+            </template>
+
+            <template v-slot:conteudo>
+                <div class="form-group">
+                    <input-container-component titulo="Nome da Marca" id="atualizarNome" id-help="atualizarNomeHelp" texto-ajuda="Informe o nome da marca">
+                        <input type="text" class="form-control" id="atualizarNome" aria-describedby="atualizarNomeHelp" placeholder="Nome da marca" v-model="nomeMarca">
+                    </input-container-component>
+                </div>
+
+                <div class="form-group">
+                    <input-container-component titulo="Imagem" id="atualizarImagem" id-help="atualizarImagemHelp" texto-ajuda="Selecione uma imagem no formato PNG">
+                        <input type="file" class="form-control" id="atualizarImagem" aria-describedby="atualizarImagemHelp" placeholder="Selecione uma imagem" @change="carregarImagem($event)">
+                    </input-container-component>
+                </div>
+            </template>
+
+            <template v-slot:rodape>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-primary" @click="atualizar()">Atualizar</button>
+            </template>
+        </modal-component>
+        <!-- Fim do modal de atulização de marca -->
 
         <!-- Inicio do modal de visualização de marca -->
         <modal-component id="modalMarcaVisualizar" titulo="Visualizar marca">
@@ -176,6 +202,9 @@ import Paginate from './Paginate.vue'
             }
         },
         methods: {
+            atualizar() {
+                console.log(this.$store.state.item)
+            },
             remover() {
                 let confirmacao = confirm('Tem certeza que deseja remover esse registro?')
 

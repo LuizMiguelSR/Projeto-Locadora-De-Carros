@@ -6505,6 +6505,9 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    atualizar: function atualizar() {
+      console.log(this.$store.state.item);
+    },
     remover: function remover() {
       var _this = this;
       var confirmacao = confirm('Tem certeza que deseja remover esse registro?');
@@ -7145,7 +7148,11 @@ var render = function render() {
               dataToggle: "modal",
               dataTarget: "#modalMarcaVisualizar"
             },
-            atualizar: true,
+            atualizar: {
+              visivel: true,
+              dataToggle: "modal",
+              dataTarget: "#modalMarcaAtualizar"
+            },
             remover: {
               visivel: true,
               dataToggle: "modal",
@@ -7311,6 +7318,100 @@ var render = function render() {
             }
           }
         }, [_vm._v("Salvar")])];
+      },
+      proxy: true
+    }])
+  }), _vm._v(" "), _c("modal-component", {
+    attrs: {
+      id: "modalMarcaAtualizar",
+      titulo: "Atualizar marca"
+    },
+    scopedSlots: _vm._u([{
+      key: "alertas",
+      fn: function fn() {
+        return undefined;
+      },
+      proxy: true
+    }, {
+      key: "conteudo",
+      fn: function fn() {
+        return [_c("div", {
+          staticClass: "form-group"
+        }, [_c("input-container-component", {
+          attrs: {
+            titulo: "Nome da Marca",
+            id: "atualizarNome",
+            "id-help": "atualizarNomeHelp",
+            "texto-ajuda": "Informe o nome da marca"
+          }
+        }, [_c("input", {
+          directives: [{
+            name: "model",
+            rawName: "v-model",
+            value: _vm.nomeMarca,
+            expression: "nomeMarca"
+          }],
+          staticClass: "form-control",
+          attrs: {
+            type: "text",
+            id: "atualizarNome",
+            "aria-describedby": "atualizarNomeHelp",
+            placeholder: "Nome da marca"
+          },
+          domProps: {
+            value: _vm.nomeMarca
+          },
+          on: {
+            input: function input($event) {
+              if ($event.target.composing) return;
+              _vm.nomeMarca = $event.target.value;
+            }
+          }
+        })])], 1), _vm._v(" "), _c("div", {
+          staticClass: "form-group"
+        }, [_c("input-container-component", {
+          attrs: {
+            titulo: "Imagem",
+            id: "atualizarImagem",
+            "id-help": "atualizarImagemHelp",
+            "texto-ajuda": "Selecione uma imagem no formato PNG"
+          }
+        }, [_c("input", {
+          staticClass: "form-control",
+          attrs: {
+            type: "file",
+            id: "atualizarImagem",
+            "aria-describedby": "atualizarImagemHelp",
+            placeholder: "Selecione uma imagem"
+          },
+          on: {
+            change: function change($event) {
+              return _vm.carregarImagem($event);
+            }
+          }
+        })])], 1)];
+      },
+      proxy: true
+    }, {
+      key: "rodape",
+      fn: function fn() {
+        return [_c("button", {
+          staticClass: "btn btn-secondary",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal"
+          }
+        }, [_vm._v("Fechar")]), _vm._v(" "), _c("button", {
+          staticClass: "btn btn-primary",
+          attrs: {
+            type: "button"
+          },
+          on: {
+            click: function click($event) {
+              return _vm.atualizar();
+            }
+          }
+        }, [_vm._v("Atualizar")])];
       },
       proxy: true
     }])
@@ -7595,7 +7696,7 @@ var render = function render() {
     return _c("th", {
       key: key
     }, [_vm._v(_vm._s(t.titulo))]);
-  }), _vm._v(" "), _vm.visualizar.visivel || _vm.atualizar || _vm.remover.visivel ? _c("th") : _vm._e()], 2)]), _vm._v(" "), _c("tbody", _vm._l(_vm.dadosFiltrados, function (obj, chave) {
+  }), _vm._v(" "), _vm.visualizar.visivel || _vm.atualizar.visivel || _vm.remover.visivel ? _c("th") : _vm._e()], 2)]), _vm._v(" "), _c("tbody", _vm._l(_vm.dadosFiltrados, function (obj, chave) {
     return _c("tr", {
       key: chave
     }, [_vm._l(obj, function (valor, chaveValor) {
@@ -7608,7 +7709,7 @@ var render = function render() {
           height: "30"
         }
       })]) : _vm._e()]);
-    }), _vm._v(" "), _vm.visualizar.visivel || _vm.atualizar || _vm.remover.visivel ? _c("td", [_vm.visualizar.visivel ? _c("button", {
+    }), _vm._v(" "), _vm.visualizar.visivel || _vm.atualizar.visivel || _vm.remover.visivel ? _c("td", [_vm.visualizar.visivel ? _c("button", {
       staticClass: "btn btn-outline-primary btn-sm",
       attrs: {
         "data-toggle": _vm.visualizar.dataToggle,
@@ -7619,8 +7720,17 @@ var render = function render() {
           return _vm.setStore(obj);
         }
       }
-    }, [_vm._v("Visualizar")]) : _vm._e(), _vm._v(" "), _vm.atualizar ? _c("button", {
-      staticClass: "btn btn-outline-primary btn-sm"
+    }, [_vm._v("Visualizar")]) : _vm._e(), _vm._v(" "), _vm.atualizar.visivel ? _c("button", {
+      staticClass: "btn btn-outline-primary btn-sm",
+      attrs: {
+        "data-toggle": _vm.atualizar.dataToggle,
+        "data-target": _vm.atualizar.dataTarget
+      },
+      on: {
+        click: function click($event) {
+          return _vm.setStore(obj);
+        }
+      }
     }, [_vm._v("Atualizar")]) : _vm._e(), _vm._v(" "), _vm.remover.visivel ? _c("button", {
       staticClass: "btn btn-outline-danger btn-sm",
       attrs: {
