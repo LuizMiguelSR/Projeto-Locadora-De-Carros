@@ -6522,12 +6522,16 @@ __webpack_require__.r(__webpack_exports__);
         }
       };
       axios.post(url, formData, config).then(function (response) {
-        console.log('Atualizado', response);
+        _this.$store.state.transacao.status = 'sucesso';
+        _this.$store.state.transacao.mensagem = 'Registro de marca atualizado com sucesso';
+
         // Limpa o campo de seleção de arquivos
         atualizarImagem.value = '';
         _this.carregarLista();
       })["catch"](function (errors) {
-        console.log('Erro de atualização', errors.response);
+        _this.$store.state.transacao.status = 'erro';
+        _this.$store.state.transacao.mensagem = errors.response.data.message;
+        _this.$store.state.transacao.dados = errors.response.data.errors;
       });
     },
     remover: function remover() {
@@ -6681,6 +6685,7 @@ __webpack_require__.r(__webpack_exports__);
     setStore: function setStore(obj) {
       this.$store.state.transacao.status = '';
       this.$store.state.transacao.mensagem = '';
+      this.$store.state.transacao.dados = '';
       this.$store.state.item = obj;
     }
   },
@@ -6722,7 +6727,7 @@ var render = function render() {
     attrs: {
       role: "alert"
     }
-  }, [_vm._v("\n    " + _vm._s(_vm.titulo) + "\n    "), _c("hr"), _vm._v(" "), _c("p", [_vm._v(_vm._s(_vm.detalhes.messagem))]), _vm._v(" "), _c("br"), _vm._v(" "), _vm.detalhes.dados ? _c("ul", _vm._l(_vm.detalhes.dados, function (e, key) {
+  }, [_vm._v("\n    " + _vm._s(_vm.titulo) + "\n    "), _c("hr"), _vm._v(" "), _c("p", [_vm._v(_vm._s(_vm.detalhes.mensagem))]), _vm._v(" "), _c("br"), _vm._v(" "), _vm.detalhes.dados ? _c("ul", _vm._l(_vm.detalhes.dados, function (e, key) {
     return _c("li", {
       key: key
     }, [_vm._v(_vm._s(e[0]))]);
@@ -7352,7 +7357,19 @@ var render = function render() {
     scopedSlots: _vm._u([{
       key: "alertas",
       fn: function fn() {
-        return undefined;
+        return [_vm.$store.state.transacao.status == "sucesso" ? _c("alert-component", {
+          attrs: {
+            tipo: "success",
+            titulo: "Transação realizada com sucesso",
+            detalhes: _vm.$store.state.transacao
+          }
+        }) : _vm._e(), _vm._v(" "), _vm.$store.state.transacao.status == "erro" ? _c("alert-component", {
+          attrs: {
+            tipo: "danger",
+            titulo: "Erro na transação",
+            detalhes: _vm.$store.state.transacao
+          }
+        }) : _vm._e()];
       },
       proxy: true
     }, {
@@ -7802,7 +7819,8 @@ var store = new Vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
     item: {},
     transacao: {
       status: '',
-      mensagem: ''
+      mensagem: '',
+      dados: ''
     }
   }
 });
