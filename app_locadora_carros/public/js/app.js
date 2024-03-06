@@ -7881,6 +7881,8 @@ var app = new vue__WEBPACK_IMPORTED_MODULE_0__["default"]({
   \***********************************/
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
+var _require = __webpack_require__(/*! axios */ "./node_modules/axios/index.js"),
+  axios = _require["default"];
 window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 try {
   __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.esm.js");
@@ -7911,6 +7913,24 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     forceTLS: true
 // });
+
+// Interceptar os request da aplicação
+axios.interceptors.request.use(function (config) {
+  console.log('Interceptando o request antes do envio', config);
+  return config;
+}, function (error) {
+  console.log('Erro na requisição: ', error);
+  return Promise.reject(error);
+});
+
+// Interceptar os responses da aplicação
+axios.interceptors.response.use(function (response) {
+  console.log('Interceptando a resposta antes da aplicação', response);
+  return config;
+}, function (error) {
+  console.log('Erro na resposta: ', error);
+  return Promise.reject(error);
+});
 
 /***/ }),
 
