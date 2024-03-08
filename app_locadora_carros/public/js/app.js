@@ -7387,7 +7387,7 @@ var render = function render() {
             disabled: ""
           },
           domProps: {
-            value: _vm.$store.state.item.created_at
+            value: _vm._f("formataDataTempoGlobal")(_vm.$store.state.item.created_at)
           }
         })])];
       },
@@ -7921,6 +7921,15 @@ axios.interceptors.response.use(function (response) {
   return response;
 }, function (error) {
   console.log('Erro na resposta: ', error);
+  if (error.response.status == 401 && error.response.data.message == 'Token has expired') {
+    console.log('Fazer nova requisição para rota refresh');
+    axios.post('http://localhost:8000/api/refresh').then(function (response) {
+      console.log('Refresh feito com sucesso: ', response);
+      document.cookie = 'token=' + response.data.token + ';SameSite=Lax';
+      console.log('Token atualizado: ', response.data.token);
+      window.location.reload();
+    });
+  }
   return Promise.reject(error);
 });
 
