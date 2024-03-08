@@ -6476,16 +6476,6 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     Paginate: _Paginate_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
-  computed: {
-    token: function token() {
-      var token = document.cookie.split(';').find(function (indice) {
-        return indice.includes('token=');
-      });
-      token = token.split('=')[1];
-      token = 'Bearer ' + token;
-      return token;
-    }
-  },
   data: function data() {
     return {
       urlBase: 'http://localhost:8000/api/v1/marca',
@@ -6494,7 +6484,7 @@ __webpack_require__.r(__webpack_exports__);
       nomeMarca: '',
       arquivoImagem: [],
       transacaoStatus: '',
-      transacaoDetalhes: [],
+      transacaoDetalhes: {},
       marcas: {
         data: []
       },
@@ -6516,16 +6506,14 @@ __webpack_require__.r(__webpack_exports__);
       var url = this.urlBase + '/' + this.$store.state.item.id;
       var config = {
         headers: {
-          'Content-type': 'multipart/form-data',
-          'Accept': 'application/json',
-          'Authorization': this.token
+          'Content-Type': 'multipart/form-data'
         }
       };
       axios.post(url, formData, config).then(function (response) {
         _this.$store.state.transacao.status = 'sucesso';
-        _this.$store.state.transacao.mensagem = 'Registro de marca atualizado com sucesso';
+        _this.$store.state.transacao.mensagem = 'Registro de marca atualizado com sucesso!';
 
-        // Limpa o campo de seleção de arquivos
+        //limpar o campo de seleção de arquivos
         atualizarImagem.value = '';
         _this.carregarLista();
       })["catch"](function (errors) {
@@ -6537,17 +6525,13 @@ __webpack_require__.r(__webpack_exports__);
     remover: function remover() {
       var _this2 = this;
       var confirmacao = confirm('Tem certeza que deseja remover esse registro?');
-      if (!confirmacao) return false;
+      if (!confirmacao) {
+        return false;
+      }
       var formData = new FormData();
       formData.append('_method', 'delete');
-      var config = {
-        headers: {
-          'Accept': 'application/json',
-          'Authorization': this.token
-        }
-      };
       var url = this.urlBase + '/' + this.$store.state.item.id;
-      axios.post(url, formData, config).then(function (response) {
+      axios.post(url, formData).then(function (response) {
         _this2.$store.state.transacao.status = 'sucesso';
         _this2.$store.state.transacao.mensagem = response.data.msg;
         _this2.carregarLista();
@@ -6557,9 +6541,12 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     pesquisar: function pesquisar() {
+      //console.log(this.busca)
+
       var filtro = '';
       for (var chave in this.busca) {
         if (this.busca[chave]) {
+          //console.log(chave, this.busca[chave])
           if (filtro != '') {
             filtro += ";";
           }
@@ -6576,23 +6563,17 @@ __webpack_require__.r(__webpack_exports__);
     },
     paginacao: function paginacao(l) {
       if (l.url) {
-        //this.urlBase = l.url // ajustando a url de consulta com o parâmetro de página
+        //this.urlBase = l.url //ajustando a url de consulta com o parâmetro de página
         this.urlPaginacao = l.url.split('?')[1];
-        this.carregarLista(); // requisitando novamente os dados para nossa API
+        this.carregarLista(); //requisitando novamente os dados para nossa API
       }
     },
     carregarLista: function carregarLista() {
       var _this3 = this;
-      var config = {
-        headers: {
-          'Accept': 'application/json',
-          'Authorization': this.token
-        }
-      };
       var url = this.urlBase + '?' + this.urlPaginacao + this.urlFiltro;
-      axios.get(url, config).then(function (response) {
+      axios.get(url).then(function (response) {
         _this3.marcas = response.data;
-        console.log(_this3.marcas);
+        //console.log(this.marcas)
       })["catch"](function (errors) {
         console.log(errors);
       });
@@ -6602,14 +6583,13 @@ __webpack_require__.r(__webpack_exports__);
     },
     salvar: function salvar() {
       var _this4 = this;
+      console.log(this.nomeMarca, this.arquivoImagem[0]);
       var formData = new FormData();
       formData.append('nome', this.nomeMarca);
       formData.append('imagem', this.arquivoImagem[0]);
       var config = {
         headers: {
-          'Content-Type': 'multipart/form-data',
-          'Accept': 'application/json',
-          'Authorization': this.token
+          'Content-Type': 'multipart/form-data'
         }
       };
       axios.post(this.urlBase, formData, config).then(function (response) {
@@ -6617,7 +6597,6 @@ __webpack_require__.r(__webpack_exports__);
         _this4.transacaoDetalhes = {
           mensagem: 'ID do registro: ' + response.data.id
         };
-        _this4.carregarLista();
         console.log(response);
       })["catch"](function (errors) {
         _this4.transacaoStatus = 'erro';
@@ -6680,7 +6659,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: ['dados', 'titulos', "atualizar", "visualizar", "remover"],
+  props: ['dados', 'titulos', 'atualizar', 'visualizar', 'remover'],
   methods: {
     setStore: function setStore(obj) {
       this.$store.state.transacao.status = '';
@@ -6696,11 +6675,11 @@ __webpack_require__.r(__webpack_exports__);
       this.dados.map(function (item, chave) {
         var itemFiltrado = {};
         campos.forEach(function (campo) {
-          itemFiltrado[campo] = item[campo]; // utilizar a sintaxe de array para atribuir valores aos objetos
+          itemFiltrado[campo] = item[campo]; //utilizar a sintaxe de array para atribuir valores a objetos
         });
         dadosFiltrados.push(itemFiltrado);
       });
-      return dadosFiltrados;
+      return dadosFiltrados; //retorne um array de objetos
     }
   }
 });
@@ -7070,13 +7049,13 @@ var render = function render() {
     staticClass: "col-md-8"
   }, [_c("card-component", {
     attrs: {
-      titulo: "Busca de Marcas"
+      titulo: "Busca de marcas"
     },
     scopedSlots: _vm._u([{
       key: "conteudo",
       fn: function fn() {
         return [_c("div", {
-          staticClass: "row"
+          staticClass: "form-row"
         }, [_c("div", {
           staticClass: "col mb-3"
         }, [_c("input-container-component", {
@@ -7113,10 +7092,10 @@ var render = function render() {
           staticClass: "col mb-3"
         }, [_c("input-container-component", {
           attrs: {
-            titulo: "Nome da Marca",
+            titulo: "Nome da marca",
             id: "inputNome",
             "id-help": "nomeHelp",
-            "texto-ajuda": "Opcional. Informe o ID da marca"
+            "texto-ajuda": "Opcional. Informe o nome da marca"
           }
         }, [_c("input", {
           directives: [{
@@ -7148,7 +7127,7 @@ var render = function render() {
       key: "rodape",
       fn: function fn() {
         return [_c("button", {
-          staticClass: "btn btn-primary btn-sm float-end",
+          staticClass: "btn btn-primary btn-sm float-right",
           attrs: {
             type: "submit"
           },
@@ -7163,7 +7142,7 @@ var render = function render() {
     }])
   }), _vm._v(" "), _c("card-component", {
     attrs: {
-      titulo: "Relação de Marcas"
+      titulo: "Relação de marcas"
     },
     scopedSlots: _vm._u([{
       key: "conteudo",
@@ -7200,7 +7179,7 @@ var render = function render() {
                 tipo: "imagem"
               },
               created_at: {
-                titulo: "Data de Criação",
+                titulo: "Criação",
                 tipo: "data"
               }
             }
@@ -7233,7 +7212,7 @@ var render = function render() {
         }), 0)], 1), _vm._v(" "), _c("div", {
           staticClass: "col"
         }, [_c("button", {
-          staticClass: "btn btn-primary btn-sm float-end",
+          staticClass: "btn btn-primary btn-sm float-right",
           attrs: {
             type: "button",
             "data-toggle": "modal",
@@ -7273,7 +7252,7 @@ var render = function render() {
           staticClass: "form-group"
         }, [_c("input-container-component", {
           attrs: {
-            titulo: "Nome da Marca",
+            titulo: "Nome da marca",
             id: "novoNome",
             "id-help": "novoNomeHelp",
             "texto-ajuda": "Informe o nome da marca"
@@ -7301,7 +7280,7 @@ var render = function render() {
               _vm.nomeMarca = $event.target.value;
             }
           }
-        })])], 1), _vm._v(" "), _c("div", {
+        })]), _vm._v("\n                " + _vm._s(_vm.nomeMarca) + "\n            ")], 1), _vm._v(" "), _c("div", {
           staticClass: "form-group"
         }, [_c("input-container-component", {
           attrs: {
@@ -7311,7 +7290,7 @@ var render = function render() {
             "texto-ajuda": "Selecione uma imagem no formato PNG"
           }
         }, [_c("input", {
-          staticClass: "form-control",
+          staticClass: "form-control-file",
           attrs: {
             type: "file",
             id: "novoImagem",
@@ -7323,7 +7302,7 @@ var render = function render() {
               return _vm.carregarImagem($event);
             }
           }
-        })])], 1)];
+        })]), _vm._v("\n                " + _vm._s(_vm.arquivoImagem) + "\n            ")], 1)];
       },
       proxy: true
     }, {
@@ -7346,112 +7325,6 @@ var render = function render() {
             }
           }
         }, [_vm._v("Salvar")])];
-      },
-      proxy: true
-    }])
-  }), _vm._v(" "), _c("modal-component", {
-    attrs: {
-      id: "modalMarcaAtualizar",
-      titulo: "Atualizar marca"
-    },
-    scopedSlots: _vm._u([{
-      key: "alertas",
-      fn: function fn() {
-        return [_vm.$store.state.transacao.status == "sucesso" ? _c("alert-component", {
-          attrs: {
-            tipo: "success",
-            titulo: "Transação realizada com sucesso",
-            detalhes: _vm.$store.state.transacao
-          }
-        }) : _vm._e(), _vm._v(" "), _vm.$store.state.transacao.status == "erro" ? _c("alert-component", {
-          attrs: {
-            tipo: "danger",
-            titulo: "Erro na transação",
-            detalhes: _vm.$store.state.transacao
-          }
-        }) : _vm._e()];
-      },
-      proxy: true
-    }, {
-      key: "conteudo",
-      fn: function fn() {
-        return [_c("div", {
-          staticClass: "form-group"
-        }, [_c("input-container-component", {
-          attrs: {
-            titulo: "Nome da Marca",
-            id: "atualizarNome",
-            "id-help": "atualizarNomeHelp",
-            "texto-ajuda": "Informe o nome da marca"
-          }
-        }, [_c("input", {
-          directives: [{
-            name: "model",
-            rawName: "v-model",
-            value: _vm.$store.state.item.nome,
-            expression: "$store.state.item.nome"
-          }],
-          staticClass: "form-control",
-          attrs: {
-            type: "text",
-            id: "atualizarNome",
-            "aria-describedby": "atualizarNomeHelp",
-            placeholder: "Nome da marca"
-          },
-          domProps: {
-            value: _vm.$store.state.item.nome
-          },
-          on: {
-            input: function input($event) {
-              if ($event.target.composing) return;
-              _vm.$set(_vm.$store.state.item, "nome", $event.target.value);
-            }
-          }
-        })])], 1), _vm._v(" "), _c("div", {
-          staticClass: "form-group"
-        }, [_c("input-container-component", {
-          attrs: {
-            titulo: "Imagem",
-            id: "atualizarImagem",
-            "id-help": "atualizarImagemHelp",
-            "texto-ajuda": "Selecione uma imagem no formato PNG"
-          }
-        }, [_c("input", {
-          staticClass: "form-control",
-          attrs: {
-            type: "file",
-            id: "atualizarImagem",
-            "aria-describedby": "atualizarImagemHelp",
-            placeholder: "Selecione uma imagem"
-          },
-          on: {
-            change: function change($event) {
-              return _vm.carregarImagem($event);
-            }
-          }
-        })])], 1)];
-      },
-      proxy: true
-    }, {
-      key: "rodape",
-      fn: function fn() {
-        return [_c("button", {
-          staticClass: "btn btn-secondary",
-          attrs: {
-            type: "button",
-            "data-dismiss": "modal"
-          }
-        }, [_vm._v("Fechar")]), _vm._v(" "), _c("button", {
-          staticClass: "btn btn-primary",
-          attrs: {
-            type: "button"
-          },
-          on: {
-            click: function click($event) {
-              return _vm.atualizar();
-            }
-          }
-        }, [_vm._v("Atualizar")])];
       },
       proxy: true
     }])
@@ -7484,7 +7357,7 @@ var render = function render() {
           }
         })]), _vm._v(" "), _c("input-container-component", {
           attrs: {
-            titulo: "Nome da Marca"
+            titulo: "Nome da marca"
           }
         }, [_c("input", {
           staticClass: "form-control",
@@ -7505,7 +7378,7 @@ var render = function render() {
           }
         }) : _vm._e()]), _vm._v(" "), _c("input-container-component", {
           attrs: {
-            titulo: "Data de Criação"
+            titulo: "Data de criação"
           }
         }, [_c("input", {
           staticClass: "form-control",
@@ -7573,7 +7446,7 @@ var render = function render() {
           }
         })]), _vm._v(" "), _c("input-container-component", {
           attrs: {
-            titulo: "Nome da Marca"
+            titulo: "Nome da marca"
           }
         }, [_c("input", {
           staticClass: "form-control",
@@ -7610,6 +7483,112 @@ var render = function render() {
       },
       proxy: true
     }], null, true)
+  }), _vm._v(" "), _c("modal-component", {
+    attrs: {
+      id: "modalMarcaAtualizar",
+      titulo: "Atualizar marca"
+    },
+    scopedSlots: _vm._u([{
+      key: "alertas",
+      fn: function fn() {
+        return [_vm.$store.state.transacao.status == "sucesso" ? _c("alert-component", {
+          attrs: {
+            tipo: "success",
+            titulo: "Transação realizada com sucesso",
+            detalhes: _vm.$store.state.transacao
+          }
+        }) : _vm._e(), _vm._v(" "), _vm.$store.state.transacao.status == "erro" ? _c("alert-component", {
+          attrs: {
+            tipo: "danger",
+            titulo: "Erro na transação",
+            detalhes: _vm.$store.state.transacao
+          }
+        }) : _vm._e()];
+      },
+      proxy: true
+    }, {
+      key: "conteudo",
+      fn: function fn() {
+        return [_c("div", {
+          staticClass: "form-group"
+        }, [_c("input-container-component", {
+          attrs: {
+            titulo: "Nome da marca",
+            id: "atualizarNome",
+            "id-help": "atualizarNomeHelp",
+            "texto-ajuda": "Informe o nome da marca"
+          }
+        }, [_c("input", {
+          directives: [{
+            name: "model",
+            rawName: "v-model",
+            value: _vm.$store.state.item.nome,
+            expression: "$store.state.item.nome"
+          }],
+          staticClass: "form-control",
+          attrs: {
+            type: "text",
+            id: "atualizarNome",
+            "aria-describedby": "atualizarNomeHelp",
+            placeholder: "Nome da marca"
+          },
+          domProps: {
+            value: _vm.$store.state.item.nome
+          },
+          on: {
+            input: function input($event) {
+              if ($event.target.composing) return;
+              _vm.$set(_vm.$store.state.item, "nome", $event.target.value);
+            }
+          }
+        })])], 1), _vm._v(" "), _c("div", {
+          staticClass: "form-group"
+        }, [_c("input-container-component", {
+          attrs: {
+            titulo: "Imagem",
+            id: "atualizarImagem",
+            "id-help": "atualizarImagemHelp",
+            "texto-ajuda": "Selecione uma imagem no formato PNG"
+          }
+        }, [_c("input", {
+          staticClass: "form-control-file",
+          attrs: {
+            type: "file",
+            id: "atualizarImagem",
+            "aria-describedby": "atualizarImagemHelp",
+            placeholder: "Selecione uma imagem"
+          },
+          on: {
+            change: function change($event) {
+              return _vm.carregarImagem($event);
+            }
+          }
+        })])], 1)];
+      },
+      proxy: true
+    }, {
+      key: "rodape",
+      fn: function fn() {
+        return [_c("button", {
+          staticClass: "btn btn-secondary",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal"
+          }
+        }, [_vm._v("Fechar")]), _vm._v(" "), _c("button", {
+          staticClass: "btn btn-primary",
+          attrs: {
+            type: "button"
+          },
+          on: {
+            click: function click($event) {
+              return _vm.atualizar();
+            }
+          }
+        }, [_vm._v("Atualizar")])];
+      },
+      proxy: true
+    }])
   })], 1);
 };
 var staticRenderFns = [];
@@ -7734,7 +7713,10 @@ var render = function render() {
     staticClass: "table table-hover"
   }, [_c("thead", [_c("tr", [_vm._l(_vm.titulos, function (t, key) {
     return _c("th", {
-      key: key
+      key: key,
+      attrs: {
+        scope: "col"
+      }
     }, [_vm._v(_vm._s(t.titulo))]);
   }), _vm._v(" "), _vm.visualizar.visivel || _vm.atualizar.visivel || _vm.remover.visivel ? _c("th") : _vm._e()], 2)]), _vm._v(" "), _c("tbody", _vm._l(_vm.dadosFiltrados, function (obj, chave) {
     return _c("tr", {
@@ -7742,7 +7724,7 @@ var render = function render() {
     }, [_vm._l(obj, function (valor, chaveValor) {
       return _c("td", {
         key: chaveValor
-      }, [_vm.titulos[chaveValor].tipo == "texto" ? _c("span", [_vm._v(_vm._s(valor))]) : _vm._e(), _vm._v(" "), _vm.titulos[chaveValor].tipo == "data" ? _c("span", [_vm._v(_vm._s(_vm._f("fomataDataTempoGlobal")(valor)))]) : _vm._e(), _vm._v(" "), _vm.titulos[chaveValor].tipo == "imagem" ? _c("span", [_c("img", {
+      }, [_vm.titulos[chaveValor].tipo == "texto" ? _c("span", [_vm._v(_vm._s(valor))]) : _vm._e(), _vm._v(" "), _vm.titulos[chaveValor].tipo == "data" ? _c("span", [_vm._v("\n                        " + _vm._s(_vm._f("formataDataTempoGlobal")(valor)) + "\n                    ")]) : _vm._e(), _vm._v(" "), _vm.titulos[chaveValor].tipo == "imagem" ? _c("span", [_c("img", {
         attrs: {
           src: "/storage/" + valor,
           width: "30",
@@ -7853,17 +7835,17 @@ vue__WEBPACK_IMPORTED_MODULE_0__["default"].component('paginate-component', (__w
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-vue__WEBPACK_IMPORTED_MODULE_0__["default"].filter('fomataDataTempoGlobal', function (d) {
+vue__WEBPACK_IMPORTED_MODULE_0__["default"].filter('formataDataTempoGlobal', function (d) {
   if (!d) return '';
   d = d.split('T');
   var data = d[0];
   var tempo = d[1];
 
-  // formatando a data
+  //formatando a data
   data = data.split('-');
   data = data[2] + '/' + data[1] + '/' + data[0];
 
-  // formatando o tempo
+  //formatar o tempo
   tempo = tempo.split('.');
   tempo = tempo[0];
   return data + ' ' + tempo;
@@ -7914,8 +7896,18 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     forceTLS: true
 // });
 
-// Interceptar os request da aplicação
+/* interceptar os requests da aplicação */
 axios.interceptors.request.use(function (config) {
+  //deinifir para todas as requisições os parâmetros de accept e autorization
+  config.headers['Accept'] = 'application/json';
+
+  //recuperando o token de autorização dos cookies
+  var token = document.cookie.split(';').find(function (indice) {
+    return indice.includes('token=');
+  });
+  token = token.split('=')[1];
+  token = 'Bearer ' + token;
+  config.headers.Authorization = token;
   console.log('Interceptando o request antes do envio', config);
   return config;
 }, function (error) {
@@ -7923,10 +7915,10 @@ axios.interceptors.request.use(function (config) {
   return Promise.reject(error);
 });
 
-// Interceptar os responses da aplicação
+/* interceptar os responses da aplicação */
 axios.interceptors.response.use(function (response) {
   console.log('Interceptando a resposta antes da aplicação', response);
-  return config;
+  return response;
 }, function (error) {
   console.log('Erro na resposta: ', error);
   return Promise.reject(error);

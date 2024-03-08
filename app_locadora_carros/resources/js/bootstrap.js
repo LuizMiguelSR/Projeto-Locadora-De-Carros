@@ -33,9 +33,23 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     forceTLS: true
 // });
 
-// Interceptar os request da aplicação
+/* interceptar os requests da aplicação */
 axios.interceptors.request.use(
     config => {
+
+        //deinifir para todas as requisições os parâmetros de accept e autorization
+        config.headers['Accept'] = 'application/json'
+
+        //recuperando o token de autorização dos cookies
+        let token = document.cookie.split(';').find(indice => {
+            return indice.includes('token=')
+        })
+
+        token = token.split('=')[1]
+        token = 'Bearer ' + token
+
+        config.headers.Authorization = token
+
         console.log('Interceptando o request antes do envio', config)
         return config
     },
@@ -45,15 +59,14 @@ axios.interceptors.request.use(
     }
 )
 
-// Interceptar os responses da aplicação
+/* interceptar os responses da aplicação */
 axios.interceptors.response.use(
     response => {
         console.log('Interceptando a resposta antes da aplicação', response)
-        return config
+        return response
     },
     error => {
         console.log('Erro na resposta: ', error)
         return Promise.reject(error)
     }
 )
-
